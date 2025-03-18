@@ -4,7 +4,12 @@ public class BallScript : MonoBehaviour
 {
     [SerializeField] private float ballStartSpeed = 5f;
     Rigidbody2D rb;
-    public float speedMagnitude;
+
+    public TMPro.TextMeshProUGUI leftText;
+    public TMPro.TextMeshProUGUI rightText;
+
+    int leftPoints = 0;
+    int rightPoints = 0;
 
     private void Awake()
     {
@@ -14,33 +19,39 @@ public class BallScript : MonoBehaviour
     private void Start()
     {
         LaunchBall();
+        leftText.text = "" + leftPoints;
+        rightText.text = "" + rightPoints;
     }
 
     void LaunchBall()
     {
+        transform.position = Vector3.zero;
         Vector2 direction = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         rb.linearVelocity = direction.normalized * ballStartSpeed;
     }
-
-    private void FixedUpdate()
-    {
-        speedMagnitude = rb.linearVelocity.magnitude;
-    }
-
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Platform"))
         {
             rb.linearVelocity *= 1.1f;
-            
-            /*
-            Vector2 velocity = rb.linearVelocity;
-            Vector2 normal = collision.GetContact(0).normal;
-
-            rb.linearVelocity = Vector2.Reflect(velocity, normal);
-            */
         }
     }
-    
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("LeftTriggerArea"))
+        {
+            rightPoints++;
+            rightText.text = "" + rightPoints;
+            LaunchBall();
+        }
+        if (collision.gameObject.CompareTag("RightTriggerArea"))
+        {
+            leftPoints++;
+            leftText.text = "" + leftPoints;
+            LaunchBall();
+        }
+    }
+
 }

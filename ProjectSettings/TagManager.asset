@@ -7,6 +7,8 @@ TagManager:
   - Ball
   - Wall
   - Platform
+  - RightTriggerArea
+  - LeftTriggerArea
   layers:
   - Default
   - TransparentFX
